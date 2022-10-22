@@ -1,19 +1,29 @@
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Azure.Functions.Worker.Configuration;
+using BlazorApp.Shared;
+using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
+using System;
 
 namespace ApiIsolated
 {
     public class Program
     {
-        public static void Main()
+        public static async Task Main(string[] args)
         {
             var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+                            .ConfigureFunctionsWorkerDefaults()
+                            .ConfigureServices(services =>
+                            {
+                                services.AddSingleton(sp =>
+                                {
+                                    return new MongoClient(Environment.GetEnvironmentVariable("AZURE_COSMOS_ENDPOINT"));
+                                });
+                                services.AddSingleton<DefinitionsRepository>();
 
-            host.Run();
+                            })
+                            .Build();
+            await host.RunAsync();
         }
     }
 }
