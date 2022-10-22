@@ -1,0 +1,45 @@
+﻿@page "/createdefinition"
+@inject HttpClient Http
+@using BlazorApp.Shared
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<MudContainer Class="mt-16">
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Create a definition</MudText>
+    <MudText Align="Align.Center">Some long pricing text should go here maybe? who knows what text you would want here, i guess i cant fill it in for you.</MudText>
+    <MudGrid Class="mt-8">
+        <MudItem xs="12" sm="6" md="4">
+
+            <MudTextField @bind-Value="@definition.Word" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="@definition.Content" Label="Mass" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="@definition.Author.Name" Label="Electrons" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="@definition.Author.Url" Label="Electrons" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="@definition.Tag" Label="Electrons" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="@definition.Abbreviation" Label="Electrons" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="@definition.LearnMoreUrl" Label="Electrons" Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+
+            <div class="d-flex align-end justify-space-between mud-width-full">
+                <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="Submit">Create Definition</MudButton>
+            </div>
+
+        </MudItem>
+
+    </MudGrid>
+</MudContainer>
+
+@code {
+
+
+
+    private Definition definition = new Definition();
+
+    // A typical POCO
+
+
+    private void Submit()
+    {
+
+        StateHasChanged();
+    }
+}

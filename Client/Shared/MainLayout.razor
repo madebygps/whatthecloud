@@ -7,7 +7,15 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+        <AuthorizeView>
+            <Authorized>
+                <MudText Typo="Typo.h5" Class="ml-3">Hello, @(context.User.Identity!.Name) </MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="./auth/logout?post_logout_redirect_uri=/">Log Out</MudButton>
+            </Authorized>
+            <NotAuthorized>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/login-providers">Log In</MudButton>
+            </NotAuthorized>
+        </AuthorizeView>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
