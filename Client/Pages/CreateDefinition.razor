@@ -2,44 +2,151 @@
 @inject HttpClient Http
 @using BlazorApp.Shared
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize]
+@using System.Text.Json
+@using MongoDB.Bson
+@using System.Text.Encodings.Web
+@using Newtonsoft.Json
+@using FluentValidation
+@inject ISnackbar Snackbar
+@attribute [Authorize(Roles = "admin")]
 
 <MudContainer Class="mt-16">
-    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Create a definition</MudText>
-    <MudText Align="Align.Center">Some long pricing text should go here maybe? who knows what text you would want here, i guess i cant fill it in for you.</MudText>
-    <MudGrid Class="mt-8">
-        <MudItem xs="12" sm="6" md="4">
 
-            <MudTextField @bind-Value="@definition.Word" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
-            <MudTextField @bind-Value="@definition.Content" Label="Mass" Variant="Variant.Outlined" Margin="Margin.Dense" />
-            <MudTextField @bind-Value="@definition.Author.Name" Label="Electrons" Variant="Variant.Outlined" Margin="Margin.Dense" />
-            <MudTextField @bind-Value="@definition.Author.Url" Label="Electrons" Variant="Variant.Outlined" Margin="Margin.Dense" />
-            <MudTextField @bind-Value="@definition.Tag" Label="Electrons" Variant="Variant.Outlined" Margin="Margin.Dense" />
-            <MudTextField @bind-Value="@definition.Abbreviation" Label="Electrons" Variant="Variant.Outlined" Margin="Margin.Dense" />
-            <MudTextField @bind-Value="@definition.LearnMoreUrl" Label="Electrons" Variant="Variant.Outlined" Margin="Margin.Dense" />
+    <MudCard>
+        <MudForm Model="@definition" @ref="@form" Validation="@(definitionValidator.ValidateValue)" ValidationDelay="0">
+            <MudCardContent>
+                <MudTextField @bind-Value="definition.Word"
+                              For="@(() => definition.Word)"
+                              Immediate="true"
+                              Label="Word" />
 
+                <MudTextField @bind-Value="definition.Content"
+                              For="@(() => definition.Content)"
+                              Immediate="true" 
+                              Label="definition" />
 
-            <div class="d-flex align-end justify-space-between mud-width-full">
-                <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="Submit">Create Definition</MudButton>
-            </div>
+                <MudTextField @bind-Value="definition.Author.Name"
+                              For="@(() => definition.Author.Name)"
+                              Immediate="true"
+                              Label="Author name" />
 
-        </MudItem>
+                <MudTextField @bind-Value="definition.Author.Url"
+                              For="@(() => definition.Author.Url)"
+                              Immediate="true"
+                              Label="Author URL" />
 
-    </MudGrid>
+                <MudTextField @bind-Value="definition.Tag"
+                              For="@(() => definition.Tag)"
+                              Immediate="true"
+                              Label="Tag" />
+
+                <MudTextField @bind-Value="definition.Abbreviation"
+                              For="@(() => definition.Abbreviation)"
+                              Immediate="true"
+                              Label="Abbreviation" />
+
+                <MudTextField @bind-Value="definition.LearnMoreUrl"
+                              For="@(() => definition.LearnMoreUrl)"
+                              Immediate="true"
+                              Label="Learn More URL" />
+            </MudCardContent>
+
+        </MudForm>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Submit</MudButton>
+        </MudCardActions>
+       
+    </MudCard>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => Snackbar.Add("Simple Snackbar"))">
+        Open Snackbar
+    </MudButton>
 </MudContainer>
 
 @code {
+    bool success;
+
+    private Definition definition = new Definition
+        {
+            Word = "The word to define",
+            Content = "The definition",
+            Author = new Author
+            {
+                Name = "Name of author",
+                Url = "www.author.com"
+            },
+            Abbreviation = "abbre",
+            Tag = "the tag",
+            LearnMoreUrl = "www.learnmore.com"
+        };
 
 
+    MudForm form;
 
-    private Definition definition = new Definition();
-
-    // A typical POCO
+    DefinitionFluentValidator definitionValidator = new DefinitionFluentValidator();
 
 
-    private void Submit()
+    private async Task Submit()
     {
+        await form.Validate();
 
-        StateHasChanged();
+        Console.WriteLine(form.IsValid);
+
+        if (form.IsValid)
+        {
+            //await Http.PostAsJsonAsync("/api/definitions", definition);
+            success = true;
+            Snackbar.Add("The reactor is running at optimum temperature");
+            Console.WriteLine("Valid!");
+
+        }
     }
+
+    /// <summary>
+    /// A standard AbstractValidator which contains multiple rules and can be shared with the back end API
+    /// </summary>
+    /// <typeparam name="OrderModel"></typeparam>
+    public class DefinitionFluentValidator : AbstractValidator<Definition>
+    {
+        public DefinitionFluentValidator()
+        {
+            RuleFor(x => x.Word)
+                .NotEmpty();
+
+            RuleFor(x => x.Content)
+                .NotEmpty()
+                .Length(1, 512);
+
+            RuleFor(x => x.Author.Name)
+                .NotEmpty();
+
+            RuleFor(x => x.Author.Url)
+            .NotEmpty();
+
+            RuleFor(x => x.Tag)
+            .NotEmpty();
+
+            RuleFor(x => x.Abbreviation)
+            .NotEmpty();
+
+            RuleFor(x => x.LearnMoreUrl)
+            .NotEmpty();
+
+
+        }
+
+
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<Definition>.CreateWithOptions((Definition)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+
+
+
+
 }
