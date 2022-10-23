@@ -1,20 +1,20 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace BlazorApp.Shared
 {
-    public class Definition
+    public class PostDefinition
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string _id { get; set; }
-
+     
 
         [BsonElement("word")]
         [JsonPropertyName("word")]
         public string Word { get; set; }
-       
+
         [BsonElement("definition")]
         [JsonPropertyName("definition")]
         public string Content { get; set; }
@@ -37,3 +37,4 @@ namespace BlazorApp.Shared
 
     }
 }
+
