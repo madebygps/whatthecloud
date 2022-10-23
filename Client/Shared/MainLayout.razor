@@ -10,7 +10,7 @@
         <AuthorizeView>
             <Authorized>
                 <MudText Typo="Typo.h5" Class="ml-3">Hello, @(context.User.Identity!.Name) </MudText>
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="./auth/logout?post_logout_redirect_uri=/">Log Out</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="/.auth/logout?post_login_redirect_uri=/fetchdata">Log Out</MudButton>
             </Authorized>
             <NotAuthorized>
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/login-providers">Log In</MudButton>

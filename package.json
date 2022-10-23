@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "scripts": {
     "start": "swa start http://localhost:5000 --run 'dotnet run --project Client/Client.csproj' --api-location Api",
-    "playwright_test" : "playwright test"
+    "playwright_test": "playwright test"
   },
- "devDependencies": {
+  "devDependencies": {
     "@playwright/test": "^1.22.2"
   },
   "dependencies": {
+    "@azure/static-web-apps-cli": "^1.0.3",
     "sirv-cli": "^2.0.2"
   }
 }

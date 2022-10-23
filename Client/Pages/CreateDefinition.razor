@@ -1,8 +1,19 @@
 ﻿@page "/createdefinition"
 @inject HttpClient Http
+@attribute [Authorize(Roles = "admin")]
 @using BlazorApp.Shared
 @using Microsoft.AspNetCore.Authorization
+<<<<<<< Updated upstream
 @attribute [Authorize]
+=======
+@using System.Text.Json
+@using MongoDB.Bson
+@using System.Text.Encodings.Web
+@using Newtonsoft.Json
+@using FluentValidation
+@inject ISnackbar Snackbar
+
+>>>>>>> Stashed changes
 
 <MudContainer Class="mt-16">
     <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Create a definition</MudText>
