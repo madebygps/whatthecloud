@@ -2,25 +2,10 @@
 @inject HttpClient Http
 @attribute [Authorize(Roles = "admin")]
 @using BlazorApp.Shared
-@using Microsoft.AspNetCore.Authorization
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-@attribute [Authorize]
-=======
-=======
->>>>>>> 51b9f8822768343068b0a13cbae7cb7133c9f5d4
-@using System.Text.Json
-@using MongoDB.Bson
-@using System.Text.Encodings.Web
-@using Newtonsoft.Json
 @using FluentValidation
-@inject ISnackbar Snackbar
-<<<<<<< HEAD
-
->>>>>>> Stashed changes
-=======
+@using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "admin")]
->>>>>>> 51b9f8822768343068b0a13cbae7cb7133c9f5d4
+
 
 <MudContainer Class="mt-16">
 
@@ -34,7 +19,7 @@
 
                 <MudTextField @bind-Value="definition.Content"
                               For="@(() => definition.Content)"
-                              Immediate="true" 
+                              Immediate="true"
                               Label="definition" />
 
                 <MudTextField @bind-Value="definition.Author.Name"
@@ -67,12 +52,8 @@
         <MudCardActions>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Submit</MudButton>
         </MudCardActions>
-       
-    </MudCard>
 
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => Snackbar.Add("Simple Snackbar"))">
-        Open Snackbar
-    </MudButton>
+    </MudCard>
 </MudContainer>
 
 @code {
@@ -108,8 +89,6 @@
         {
             //await Http.PostAsJsonAsync("/api/definitions", definition);
             success = true;
-            Snackbar.Add("The reactor is running at optimum temperature");
-            Console.WriteLine("Valid!");
 
         }
     }
