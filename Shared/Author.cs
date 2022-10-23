@@ -7,10 +7,9 @@ namespace BlazorApp.Shared
     {
         [BsonElement("name")]
         [JsonPropertyName("name")]
-        public string Name { get; set; }
-
+        public string Name { get; set; } 
         [BsonElement("link")]
         [JsonPropertyName("url")]
-        public string Url { get; set; }
+        public string Url { get; set; } 
     }
 }

@@ -10,26 +10,25 @@ namespace BlazorApp.Shared
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; }
 
-
         [BsonElement("word")]
         [JsonPropertyName("word")]
-        public string Word { get; set; }
+        public string Word { get; set; } 
        
         [BsonElement("definition")]
         [JsonPropertyName("definition")]
-        public string Content { get; set; }
+        public string Content { get; set; } 
 
         [BsonElement("author")]
         [JsonPropertyName("author")]
-        public Author Author { get; set; }
+        public Author Author { get; set; } 
 
         [BsonElement("learnMoreUrl")]
         [JsonPropertyName("learnMoreUrl")]
-        public string LearnMoreUrl { get; set; }
+        public string LearnMoreUrl { get; set; } 
 
         [BsonElement("tag")]
         [JsonPropertyName("tag")]
-        public string Tag { get; set; }
+        public string Tag { get; set; } 
 
         [BsonElement("abbreviation")]
         [JsonPropertyName("abbreviation")]

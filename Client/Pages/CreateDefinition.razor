@@ -1,10 +1,9 @@
 ﻿@page "/createdefinition"
 @inject HttpClient Http
-@attribute [Authorize(Roles = "admin")]
+@* @attribute [Authorize(Roles = "admin")] *@
 @using BlazorApp.Shared
 @using FluentValidation
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize(Roles = "admin")]
 
 
 <MudContainer Class="mt-16">
@@ -12,45 +11,31 @@
     <MudCard>
         <MudForm Model="@definition" @ref="@form" Validation="@(definitionValidator.ValidateValue)" ValidationDelay="0">
             <MudCardContent>
-                <MudTextField @bind-Value="definition.Word"
-                              For="@(() => definition.Word)"
-                              Immediate="true"
-                              Label="Word" />
+                <MudTextField @bind-Value="definition.Word" For="@(() => definition.Word)" Immediate="true"
+                    Label="Word" />
 
-                <MudTextField @bind-Value="definition.Content"
-                              For="@(() => definition.Content)"
-                              Immediate="true"
-                              Label="definition" />
+                <MudTextField @bind-Value="definition.Content" For="@(() => definition.Content)" Immediate="true"
+                    Label="definition" />
 
-                <MudTextField @bind-Value="definition.Author.Name"
-                              For="@(() => definition.Author.Name)"
-                              Immediate="true"
-                              Label="Author name" />
+                <MudTextField @bind-Value="definition.Author.Name" For="@(() => definition.Author.Name)"
+                    Immediate="true" Label="Author name" />
 
-                <MudTextField @bind-Value="definition.Author.Url"
-                              For="@(() => definition.Author.Url)"
-                              Immediate="true"
-                              Label="Author URL" />
+                <MudTextField @bind-Value="definition.Author.Url" For="@(() => definition.Author.Url)" Immediate="true"
+                    Label="Author URL" />
 
-                <MudTextField @bind-Value="definition.Tag"
-                              For="@(() => definition.Tag)"
-                              Immediate="true"
-                              Label="Tag" />
+                <MudTextField @bind-Value="definition.Tag" For="@(() => definition.Tag)" Immediate="true" Label="Tag" />
 
-                <MudTextField @bind-Value="definition.Abbreviation"
-                              For="@(() => definition.Abbreviation)"
-                              Immediate="true"
-                              Label="Abbreviation" />
+                <MudTextField @bind-Value="definition.Abbreviation" For="@(() => definition.Abbreviation)"
+                    Immediate="true" Label="Abbreviation" />
 
-                <MudTextField @bind-Value="definition.LearnMoreUrl"
-                              For="@(() => definition.LearnMoreUrl)"
-                              Immediate="true"
-                              Label="Learn More URL" />
+                <MudTextField @bind-Value="definition.LearnMoreUrl" For="@(() => definition.LearnMoreUrl)"
+                    Immediate="true" Label="Learn More URL" />
             </MudCardContent>
 
         </MudForm>
         <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Submit</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
+                OnClick="@(async () => await Submit())">Submit</MudButton>
         </MudCardActions>
 
     </MudCard>
@@ -60,25 +45,21 @@
     bool success;
 
     private Definition definition = new Definition
+    {
+        Word = "",
+        Content = "",
+        Author = new Author
         {
-            Word = "The word to define",
-            Content = "The definition",
-            Author = new Author
-            {
-                Name = "Name of author",
-                Url = "www.author.com"
-            },
-            Abbreviation = "abbre",
-            Tag = "the tag",
-            LearnMoreUrl = "www.learnmore.com"
-        };
-
+            Name = "",
+            Url = ""
+        },
+        Abbreviation = "",
+        Tag = "",
+        LearnMoreUrl = ""
+    };
 
     MudForm form;
-
     DefinitionFluentValidator definitionValidator = new DefinitionFluentValidator();
-
-
     private async Task Submit()
     {
         await form.Validate();
@@ -87,8 +68,9 @@
 
         if (form.IsValid)
         {
-            //await Http.PostAsJsonAsync("/api/definitions", definition);
+            await Http.PostAsJsonAsync("/api/definitions", definition);
             success = true;
+            form.Reset();
 
         }
     }
@@ -102,14 +84,14 @@
         public DefinitionFluentValidator()
         {
             RuleFor(x => x.Word)
-                .NotEmpty();
+            .NotEmpty();
 
             RuleFor(x => x.Content)
-                .NotEmpty()
-                .Length(1, 512);
+            .NotEmpty()
+            .Length(1, 512);
 
             RuleFor(x => x.Author.Name)
-                .NotEmpty();
+            .NotEmpty();
 
             RuleFor(x => x.Author.Url)
             .NotEmpty();
@@ -123,14 +105,13 @@
             RuleFor(x => x.LearnMoreUrl)
             .NotEmpty();
 
-
         }
-
 
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
-            var result = await ValidateAsync(ValidationContext<Definition>.CreateWithOptions((Definition)model, x => x.IncludeProperties(propertyName)));
+            var result = await ValidateAsync(ValidationContext<Definition>.CreateWithOptions((Definition)model, x =>
+    x.IncludeProperties(propertyName)));
             if (result.IsValid)
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);
