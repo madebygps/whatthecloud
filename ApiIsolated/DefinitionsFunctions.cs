@@ -6,6 +6,7 @@ using BlazorApp.Shared;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson.Serialization;
 
 namespace ApiIsolated
 {
@@ -44,9 +45,8 @@ namespace ApiIsolated
         public async Task<HttpResponseData> CreateDefinition([HttpTrigger(AuthorizationLevel.Function, "post", Route = "definitions")] HttpRequestData req)
         {
             var response = req.CreateResponse(HttpStatusCode.OK);
-            var request = req.Body;
-            var streamReader = new StreamReader(request);
-            var newDefinition = JsonSerializer.Deserialize<Definition>(streamReader.ReadToEnd());
+
+            var newDefinition = JsonSerializer.Deserialize<Definition>(req.Body);
             await _repository.CreateAsync(newDefinition);
             string jsonString = JsonSerializer.Serialize(newDefinition);
             response.WriteString(jsonString);

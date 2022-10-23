@@ -23,7 +23,7 @@ namespace BlazorApp.Shared
         public async Task<Definition> GetDefinitionAsync(string id)
         {
             //var query_id = ObjectId.Parse(id);
-            return await _definitionsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            return await _definitionsCollection.Find(x => x._id == id).FirstOrDefaultAsync();
         }
 
         public async Task CreateAsync(Definition newDefinition)
@@ -33,11 +33,11 @@ namespace BlazorApp.Shared
         public async Task UpdateAsync(string id, Definition updatedDefinition)
         {
 
-            await _definitionsCollection.ReplaceOneAsync(x => x.Id == id, updatedDefinition);
+            await _definitionsCollection.ReplaceOneAsync(x => x._id == id, updatedDefinition);
         }
         public async Task RemoveAsync(string id)
         {
-            await _definitionsCollection.DeleteOneAsync(x => x.Id == id);
+            await _definitionsCollection.DeleteOneAsync(x => x._id == id);
         }
     }
 }
