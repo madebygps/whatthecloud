@@ -1,21 +1,22 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
 
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+        <MudImage Src="logoclipped.png" Alt="Mony the dog" Elevation="25" Class="rounded-lg" Width="250" Height="70"/>
         <MudSpacer />
         <AuthorizeView>
             <Authorized>
-                <MudText Typo="Typo.h5" Class="ml-3">Hello, @(context.User.Identity!.Name) </MudText>
+                <MudText Typo="Typo.body1" Class="ml-3">Hello, @(context.User.Identity!.Name) </MudText>
                 <MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="/.auth/logout?post_login_redirect_uri=/fetchdata">Log Out</MudButton>
             </Authorized>
             <NotAuthorized>
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/login-providers">Log In</MudButton>
             </NotAuthorized>
         </AuthorizeView>
+        <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" ThumbIcon="@Icons.Outlined.Bedtime"/>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
@@ -26,6 +27,8 @@
 </MudLayout>
 @code {
     bool _drawerOpen = false;
+    private MudTheme _theme = new();
+    private bool _isDarkMode = true;
 
     void DrawerToggle()
     {
